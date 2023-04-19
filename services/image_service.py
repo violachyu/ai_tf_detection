@@ -104,16 +104,17 @@ class ImageService:
         
         # 將預測值拿去尋找line_message
         # 並依照該line_message，進行消息回覆
-        if prediction.max() > 0.6:
-            result_message_array = detect_json_array_to_new_message_array("line_message_json/"+class_dict.get(max_probability_item_index)+".json")
+        if prediction.max() > 0.8:
+            # result_message_array = detect_json_array_to_new_message_array("line_message_json/"+class_dict.get(max_probability_item_index)+".json")
             cls.line_bot_api.reply_message(
                 event.reply_token,
-                result_message_array
+                # result_message_array
+                TextSendMessage(f"""成功！""")
             )
         else:
             cls.line_bot_api.reply_message(
                 event.reply_token,
-                TextSendMessage(f"""圖片無法辨認，圖片已上傳，請期待未來的AI服務！""")
+                TextSendMessage(f"""失敗！""")
             )
             
         # 移除本地檔案
