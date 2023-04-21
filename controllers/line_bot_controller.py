@@ -47,15 +47,16 @@ class LineBotController:
         ImageService.line_user_upload_image(event)
         return "OK"
 
-    # 用戶收到照片時的處理辦法
+    # 用戶收到影片時的處理辦法
     @classmethod
     def handle_video_message(cls, event):
-        VideoService.line_user_upload_video(event)
+        # VideoService.line_user_upload_video(event)
         return "OK"
 
+    # 用戶收到音訊時的處理辦法
     @classmethod
     def handle_audio_message(cls, event):
-        AudioService.line_user_upload_video(event)
+        # AudioService.line_user_upload_video(event)
         return "OK"
 
     # 擷取event的data欄位，並依照function_name，丟入不同的方法
