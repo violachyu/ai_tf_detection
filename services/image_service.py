@@ -33,7 +33,8 @@ import os
 
 from utils.reply_send_message import detect_json_array_to_new_message_array
 
-model = tensorflow.keras.models.load_model('converted_savedmodel/model.savedmodel')
+# Load the model
+model = tensorflow.keras.models.load_model('converted_savedmodel/model.h5')
 
 class ImageService:
     line_bot_api = LineBotApi(channel_access_token=os.environ["LINE_CHANNEL_ACCESS_TOKEN"])
@@ -81,15 +82,14 @@ class ImageService:
 
         # Load the model
         # model = tensorflow.keras.models.load_model('converted_savedmodel/model.savedmodel')
-        
+
         # 圖片預測
-        data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
         image = Image.open(temp_file_path)
         size = (224, 224)
-        image = ImageOps.fit(image, size, Image.ANTIALIAS)
+        image = ImageOps.fit(image, size, Image.LANCZOS)
         image_array = np.asarray(image)
         # Normalize the image
-        normalized_image_array = (image_array.astype(np.float32) / 127.0 - 1 )
+        normalized_image_array = (image_array.astype(np.float32) / 127.5 - 1 )
 
         # Load the image into the array
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
@@ -97,11 +97,10 @@ class ImageService:
 
         # run the inference
         prediction = model.predict(data)
-        
+
         # 取得預測值
         max_probability_item_index = np.argmax(prediction[0])
 
-        
         # 將預測值拿去尋找line_message
         # 並依照該line_message，進行消息回覆
         if prediction.max() > 0.8:
@@ -109,7 +108,7 @@ class ImageService:
             cls.line_bot_api.reply_message(
                 event.reply_token,
                 # result_message_array
-                TextSendMessage(f"""成功！""")
+                TextSendMessage(f"""{class_dict.get(max_probability_item_index)}""")
             )
         else:
             cls.line_bot_api.reply_message(
