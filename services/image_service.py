@@ -15,7 +15,8 @@ from linebot import (
 import os
 from daos.user_dao import UserDAO
 from linebot.models import (
-    TextSendMessage
+    TextSendMessage,
+    ImageSendMessage
 )
 
 
@@ -32,6 +33,8 @@ import time
 import os
 
 from utils.reply_send_message import detect_json_array_to_new_message_array
+
+import random
 
 # Load the model
 model = tensorflow.keras.models.load_model('converted_savedmodel/model.h5')
@@ -103,19 +106,33 @@ class ImageService:
 
         # 將預測值拿去尋找line_message
         # 並依照該line_message，進行消息回覆
-        if prediction.max() > 0.8:
-            # result_message_array = detect_json_array_to_new_message_array("line_message_json/"+class_dict.get(max_probability_item_index)+".json")
-            cls.line_bot_api.reply_message(
-                event.reply_token,
-                # result_message_array
-                TextSendMessage(f"""{class_dict.get(max_probability_item_index)}""")
-            )
-        else:
-            cls.line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(f"""失敗！""")
-            )
-            
+        # if prediction.max() > 0.8:
+        #     # result_message_array = detect_json_array_to_new_message_array("line_message_json/"+class_dict.get(max_probability_item_index)+".json")
+        #     cls.line_bot_api.reply_message(
+        #         event.reply_token,
+        #         # result_message_array
+        #         TextSendMessage(f"""{class_dict.get(max_probability_item_index)}""")
+        #     )
+        # else:
+        #     cls.line_bot_api.reply_message(
+        #         event.reply_token,
+        #         TextSendMessage(f"""失敗！""")
+        #     )
+
+        message = [TextSendMessage(f"""{class_dict.get(max_probability_item_index)}""")]
+        # blobs = bucket.list_blobs(prefix=f'{event.source.user_id}/image/')
+        # # 隨機選張圖
+        # blob = random.choice(list(blobs))
+        # img_url = blob.public_url
+        img_url = 'https://cdn0.techbang.com/system/images/511541/original/7d2f209974c27729ebb84ddb0cff0afd.jpg'
+        # 加入無雷梗圖
+        message.append(ImageSendMessage(original_content_url=img_url, preview_image_url=img_url))
+
+        cls.line_bot_api.reply_message(
+            event.reply_token,
+            message
+        )
+
         # 移除本地檔案
         os.remove(temp_file_path)
 
