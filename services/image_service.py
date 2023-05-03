@@ -62,7 +62,7 @@ class ImageService:
         # 上傳至bucket
         storage_client = storage.Client()
         bucket_name = os.environ['USER_INFO_GS_BUCKET_NAME']
-        destination_blob_name = f'{event.source.user_id}/image/{event.message.id}.png'
+        destination_blob_name = f'users/{event.source.user_id}/image/{event.message.id}.png'
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(destination_blob_name)
         blob.upload_from_filename(temp_file_path)

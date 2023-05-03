@@ -56,13 +56,13 @@ class UserService:
             # 上傳至bucket
             storage_client = storage.Client()
             bucket_name = os.environ['USER_INFO_GS_BUCKET_NAME']
-            destination_blob_name = f'{user.line_user_id}/user_pic.png'
+            destination_blob_name = f'users/{user.line_user_id}/user_pic.png'
             bucket = storage_client.bucket(bucket_name)
             blob = bucket.blob(destination_blob_name)
             blob.upload_from_filename(file_name)
 
             # 更新回user的圖片連結
-            destination_url = f'https://storage.googleapis.com/{bucket_name}/{user.line_user_id}/user_pic.png'
+            destination_url = f'https://storage.googleapis.com/{bucket_name}/users/{user.line_user_id}/user_pic.png'
             user.line_user_pic_url = destination_url
 
         # 存入資料庫
