@@ -32,7 +32,8 @@ import time
 
 import os
 
-from utils.reply_send_message import detect_json_array_to_new_message_array
+import json
+#from utils.reply_send_message import detect_json_array_to_new_message_array
 
 import random
 
@@ -119,14 +120,23 @@ class ImageService:
         #         TextSendMessage(f"""失敗！""")
         #     )
 
-        message = [TextSendMessage(f"""{class_dict.get(max_probability_item_index)}""")]
-        # blobs = bucket.list_blobs(prefix=f'{event.source.user_id}/image/')
-        # # 隨機選張圖
-        # blob = random.choice(list(blobs))
-        # img_url = blob.public_url
-        img_url = 'https://cdn0.techbang.com/system/images/511541/original/7d2f209974c27729ebb84ddb0cff0afd.jpg'
-        # 加入無雷梗圖
-        message.append(ImageSendMessage(original_content_url=img_url, preview_image_url=img_url))
+        # 取出場景分類
+        scene_class = class_dict.get(max_probability_item_index)
+        # 取出分類回傳內容
+        message_dict = {}
+        with open("line_message_json/message.json",encoding='utf8') as f:
+            message_dict = json.load(f)
+        message = [TextSendMessage(f"""{message_dict.get(scene_class, {}).get("text", "找不到相關場景")}""")]
+
+        # 處理無雷梗圖
+        blobs = bucket.list_blobs(prefix=f'memes/{scene_class}')
+        blobs_list = list(blobs)
+        if len(blobs_list) > 0:
+            # 隨機選張圖
+            blob = random.choice(blobs_list)
+            img_url = blob.public_url
+            # 加入無雷梗圖
+            message.append(ImageSendMessage(original_content_url=img_url, preview_image_url=img_url))
 
         cls.line_bot_api.reply_message(
             event.reply_token,
