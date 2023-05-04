@@ -26,7 +26,7 @@ from google.cloud import storage
 
 # 圖像辨識
 import tensorflow.keras
-from PIL import Image, ImageOps
+# from PIL import Image, ImageOps
 import numpy as np
 import time
 
@@ -84,41 +84,18 @@ class ImageService:
         # Disable scientific notation for clarity
         np.set_printoptions(suppress=True)
 
-        # Load the model
-        # model = tensorflow.keras.models.load_model('converted_savedmodel/model.savedmodel')
+        img_height = 224
+        img_width = 224
 
         # 圖片預測
-        image = Image.open(temp_file_path)
-        size = (224, 224)
-        image = ImageOps.fit(image, size, Image.LANCZOS)
-        image_array = np.asarray(image)
-        # Normalize the image
-        normalized_image_array = (image_array.astype(np.float32) / 127.5 - 1 )
+        img = tensorflow.keras.preprocessing.image.load_img(temp_file_path, target_size=(img_height, img_width))
+        img_array = tensorflow.keras.preprocessing.image.img_to_array(img)
+        img_array_expanded_dims = np.expand_dims(img_array, axis=0)
+        preprocessed_image =  tensorflow.keras.applications.mobilenet_v2.preprocess_input(img_array_expanded_dims)
 
-        # Load the image into the array
-        data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
-        data[0]= normalized_image_array[0:224,0:224,0:3]
-
-        # run the inference
-        prediction = model.predict(data)
-
+        predictions = model.predict(preprocessed_image)
         # 取得預測值
-        max_probability_item_index = np.argmax(prediction[0])
-
-        # 將預測值拿去尋找line_message
-        # 並依照該line_message，進行消息回覆
-        # if prediction.max() > 0.8:
-        #     # result_message_array = detect_json_array_to_new_message_array("line_message_json/"+class_dict.get(max_probability_item_index)+".json")
-        #     cls.line_bot_api.reply_message(
-        #         event.reply_token,
-        #         # result_message_array
-        #         TextSendMessage(f"""{class_dict.get(max_probability_item_index)}""")
-        #     )
-        # else:
-        #     cls.line_bot_api.reply_message(
-        #         event.reply_token,
-        #         TextSendMessage(f"""失敗！""")
-        #     )
+        max_probability_item_index = np.argmax(predictions)
 
         # 取出場景分類
         scene_class = class_dict.get(max_probability_item_index)
