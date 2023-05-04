@@ -1,2 +1,4 @@
 # ai_tf_detection
-在colab上進行模型POC
+專案資料夾位置
+
+* [Ggoogle Drive](https://drive.google.com/drive/folders/1lkN5X1vFsKOWLGTRlp-Vet8MwxmSdENr?usp=share_link)
