@@ -27,7 +27,7 @@ from linebot import (
 import os
 line_bot_api=LineBotApi(channel_access_token=os.environ["LINE_CHANNEL_ACCESS_TOKEN"])
 handler=WebhookHandler(channel_secret=os.environ["LINE_CHANNEL_SECRET"])
-
+bucket_name = os.environ['USER_INFO_GS_BUCKET_NAME']
 
 # 載入Follow事件
 from linebot.models.events import (
@@ -45,8 +45,8 @@ from google.cloud.logging.handlers import CloudLoggingHandler
 client = google.cloud.logging.Client()
 
 # 建立line event log，用來記錄line event
-bot_event_handler = CloudLoggingHandler(client,name="ncu_bot_event")
-bot_event_logger=logging.getLogger('ncu_bot_event')
+bot_event_handler = CloudLoggingHandler(client,name=bucket_name)
+bot_event_logger=logging.getLogger(bucket_name)
 bot_event_logger.setLevel(logging.INFO)
 bot_event_logger.addHandler(bot_event_handler)
 
