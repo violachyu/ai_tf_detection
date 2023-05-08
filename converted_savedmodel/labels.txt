@@ -1,6 +1,6 @@
-0 EndGame_2457
-1 EndGame_2458
-2 EndGame_2459
+0 c1
+1 c1
+2 c1
 3 EndGame_2460
 4 EndGame_2461
 5 EndGame_2462
@@ -14,10 +14,10 @@
 13 EndGame_2470
 14 EndGame_2471
 15 EndGame_2472
-16 EndGame_2473
+16 c5
 17 EndGame_2474
 18 EndGame_2475
-19 EndGame_2476
+19 c3
 20 EndGame_2477
 21 EndGame_2478
 22 EndGame_2479
@@ -27,9 +27,9 @@
 26 EndGame_2483
 27 EndGame_2484
 28 EndGame_2485
-29 EndGame_2486
-30 EndGame_2487
-31 EndGame_2488
+29 c2
+30 c4
+31 c4
 32 EndGame_2489
 33 EndGame_2490
 34 EndGame_2491
@@ -43,8 +43,8 @@
 42 EndGame_2499
 43 EndGame_2500
 44 EndGame_2501
-45 EndGame_2502
-46 EndGame_2503
+45 c4
+46 c5
 47 EndGame_2504
 48 EndGame_2505
 49 EndGame_2506
