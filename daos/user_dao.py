@@ -6,12 +6,13 @@ get_user(user_id:str):取用資料，開放以user_id的方式尋找
 
 from models.user import User
 from google.cloud import firestore
-
+import os
 
 class UserDAO:
+    bucket_name = os.environ['USER_INFO_GS_BUCKET_NAME']
     # 建立客戶端
     db = firestore.Client()
-    users_ref = db.collection(u'users')
+    users_ref = db.collection(f'{bucket_name}_users')
 
     # 新增資料時，若有重複資料，則採更新
     @classmethod
